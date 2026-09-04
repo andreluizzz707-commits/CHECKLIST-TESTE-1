@@ -9,5 +9,5 @@
    A service_role key NUNCA entra aqui nem em nenhum arquivo deste repositório.
    ============================================================================ */
 
-const SUPABASE_URL = "https://nqgocyfmiyeeimhbvhhj.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_X5Ujeu7CeXp7jWOGfoCN5Q_WMO-eSgm";
+const SUPABASE_URL = "https://myjjtduvbpfvcjqujfyu.supabase.co;
+const SUPABASE_ANON_KEY = "sb_publishable_EfsGj-5P6UraUOWzK3XOMw_GszhbHug";
