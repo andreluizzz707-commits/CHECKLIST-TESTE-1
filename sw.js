@@ -1,5 +1,5 @@
 /* ============================================================================
-   ASL Consultoria.IA — service worker
+   ASL Comercial — service worker
 
    Estratégia: NETWORK-FIRST. Sempre tenta a rede primeiro, para você nunca
    ficar preso numa versão antiga do sistema depois de um deploy na Vercel.
@@ -9,7 +9,7 @@
    Isso apaga o cache antigo de todo mundo no próximo acesso.
    ============================================================================ */
 
-const CACHE = "asl-v4";
+const CACHE = "asl-v6";
 
 const SHELL = [
   "/",
