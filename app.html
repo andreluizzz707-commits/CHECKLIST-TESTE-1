@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#16265A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ASL">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" href="/icon-192.png">
+<title>ASL Consultoria.IA · Checklist e Gestão Operacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* --- ASL · paleta azul e branco, alinhada ao logo e à landing page --- */
+    --bg:#F6F8FD; --surface:#FFFFFF; --ink:#16265A; --ink-soft:#4C5C8A; --ink-faint:#8C9BC4;
+
+    /* azul do wordmark = cor institucional */
+    --steel:#354EAB; --steel-dark:#16265A;
+    --brand:#354EAB; --brand-soft:#4C68D6;
+
+    /* laranja-âmbar = cor de destaque, para o que precisa chamar atenção */
+    --accent:#F2802E; --accent-ink:#4A1B06; --accent-soft:#FDEBDC;
+
+    --ok:#2F7D5B; --ok-bg:#E4F2EB; --warn:#B87309; --warn-bg:#FCF0DC;
+    --danger:#BF3A24; --danger-bg:#FBE8E3; --info-bg:#F3EAE3;
+    --line:#E6DFD4; --line-soft:#F0EAE1;
+
+    /* brilho perolado */
+    --pearl-sheen: linear-gradient(160deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,.5) 42%, rgba(242,128,46,.05) 100%);
+    --radius:12px;
+    --shadow: 0 1px 2px rgba(22,38,90,.05), 0 6px 20px rgba(22,38,90,.07);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  html,body{height:100%;}
+  body{font-family:'Inter',sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 700px at 8% -8%, rgba(242,128,46,.10), transparent 60%),
+      radial-gradient(900px 600px at 100% 0%, rgba(53,78,171,.07), transparent 55%),
+      radial-gradient(800px 800px at 50% 110%, rgba(255,255,255,.85), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;}
+  h1,h2,h3,.num{font-family:'Barlow Condensed',sans-serif; font-weight:600; letter-spacing:.2px;}
+  button{font-family:'Inter',sans-serif; cursor:pointer;}
+  input,select,textarea{font-family:'Inter',sans-serif;}
+  p{line-height:1.55;}
+
+  .gate{min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(160deg, rgba(22,38,90,.82), rgba(53,78,171,.78) 55%, rgba(76,104,214,.74)), url('bg-gate.jpg') center/cover no-repeat;
+    position:relative; overflow:hidden; padding:24px;}
+  .gate::before{content:""; position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0px, rgba(255,255,255,.035) 1px, transparent 1px, transparent 42px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0px, rgba(255,255,255,.035) 1px, transparent 1px, transparent 42px);
+    pointer-events:none;}
+  .gate-card{position:relative; width:100%; max-width:420px; border-radius:16px;
+    background:var(--pearl-sheen), var(--surface);
+    padding:36px 34px 30px; box-shadow:0 24px 70px rgba(13,23,51,.45), inset 0 1px 0 rgba(255,255,255,.9);}
+  .gate-card.wide{max-width:480px;}
+  .brand{display:flex; align-items:center; gap:10px; margin-bottom:24px;}
+  .brand-mark{width:40px; height:40px; border-radius:10px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    background:linear-gradient(150deg,#FFFFFF 0%, #F6F1E8 55%, #F0E4D6 100%);
+    box-shadow:0 1px 2px rgba(22,38,90,.10), inset 0 1px 0 rgba(255,255,255,.9);}
+  .brand-mark img{width:78%; height:78%; object-fit:contain; display:block;}
+  .brand-name{letter-spacing:1.5px;}
+  .brand-name{font-size:20px; font-weight:700; font-family:'Barlow Condensed',sans-serif; letter-spacing:.5px;}
+  .brand-sub{font-size:11px; color:var(--ink-faint); margin-top:-2px;}
+  .gate-card h1{font-size:23px; margin:0 0 4px; font-weight:600;}
+  .gate-card p.lead{margin:0 0 22px; color:var(--ink-soft); font-size:14px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;}
+  .field input, .field select{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px; background:#F6F8FD; color:var(--ink);}
+  .field textarea{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:#fff;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .field-hint{font-size:11.5px; color:var(--ink-faint); margin-top:4px;}
+  .btn{border:none; border-radius:8px; padding:10px 16px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; justify-content:center;}
+  .btn-primary{background:var(--steel); color:#fff; width:100%; padding:11px;}
+  .btn-primary:hover{background:var(--steel-dark);}
+  .btn-primary:disabled{opacity:.5; cursor:not-allowed;}
+  .btn-accent{background:linear-gradient(135deg,#FF9750,#EE7220); color:#16265A;}
+  .btn-accent:hover{filter:brightness(0.95);}
+  .btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--line);}
+  .btn-ghost:hover{background:var(--line-soft);}
+  .error-box{background:var(--danger-bg); color:var(--danger); font-size:13px; padding:9px 12px; border-radius:8px; margin-bottom:14px; display:none;}
+  .gate-hint{margin-top:18px; font-size:12px; color:var(--ink-faint); line-height:1.6; border-top:1px solid var(--line-soft); padding-top:14px;}
+  .gate-hint b{color:var(--ink-soft);}
+  .back-link{background:none; border:none; color:var(--ink-soft); font-size:12.5px; font-weight:600; padding:0; margin-bottom:16px; display:inline-flex; align-items:center; gap:5px;}
+  .back-link:hover{color:var(--ink);}
+  .opt-btn{width:100%; text-align:left; background:#F6F8FD; border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:12px; display:flex; align-items:center; gap:14px;}
+  .opt-btn:hover{border-color:var(--accent); background:#FFFFFF;}
+  .opt-icon{width:38px; height:38px; border-radius:8px; background:var(--steel); color:#fff; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:18px;}
+  .opt-title{font-weight:700; font-size:14.5px;}
+  .opt-sub{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .company-chip{display:flex; align-items:center; gap:10px; background:#F6F8FD; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:20px;}
+  .company-chip .avatar{width:32px;height:32px;border-radius:8px;background:var(--steel);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+  .company-chip .cname{font-size:13.5px; font-weight:700;}
+  .company-chip .ccode{font-size:11.5px; color:var(--ink-faint);}
+  .photo-box{border:2px dashed var(--line); border-radius:12px; padding:20px; text-align:center; background:#F6F8FD; margin-bottom:16px;}
+  .photo-preview{width:100%; max-width:260px; border-radius:10px; margin:0 auto 14px; display:block; box-shadow:var(--shadow);}
+  .photo-placeholder{width:120px; height:120px; border-radius:50%; background:#F3E9DF; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-size:38px; color:var(--ink-faint);}
+
+  #app{display:none; min-height:100vh;}
+  .shell{display:flex; min-height:100vh;}
+  .sidebar{width:230px; flex-shrink:0; color:#fff; display:flex; flex-direction:column; padding:20px 14px;
+    background:linear-gradient(175deg, #7E3216 0%, #16265A 55%, #16265A 100%);}
+  .sidebar .brand{padding:0 6px; margin-bottom:8px;}
+  .sidebar .brand-name{color:#fff;}
+  .sidebar .brand-sub{color:#E0BFA8;}
+  .sidebar-company{font-size:11px; color:#B9C6E6; padding:0 6px 22px; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:14px;}
+  .sidebar-company b{color:#FBF3EC;}
+  .nav-item{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:8px; color:#DCE3F0; font-size:14px; font-weight:500; cursor:pointer; margin-bottom:2px; border:none; background:transparent; width:100%; text-align:left;}
+  .nav-item:hover{background:rgba(255,255,255,.06); color:#fff;}
+  .nav-item.active{background:linear-gradient(135deg,#FF9750,#EE7220); color:#16265A; font-weight:700; box-shadow:0 2px 10px rgba(242,128,46,.35);}
+  .nav-icon{width:18px; text-align:center; font-size:15px;}
+  .nav-spacer{flex:1;}
+  .sidebar-footer{border-top:1px solid rgba(255,255,255,.1); padding-top:14px; margin-top:10px;}
+  .user-chip{display:flex; align-items:center; gap:10px; padding:6px; margin-bottom:10px;}
+  .avatar{width:32px; height:32px; border-radius:50%; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; overflow:hidden;}
+  .avatar img{width:100%; height:100%; object-fit:cover;}
+  .user-chip-name{font-size:13px; font-weight:600; color:#fff;}
+  .user-chip-role{font-size:11px; color:#B9C6E6;}
+  .logout-btn{width:100%; background:transparent; border:1px solid rgba(255,255,255,.22); color:#DCE3F0; padding:8px; border-radius:8px; font-size:13px;}
+  .logout-btn:hover{background:rgba(255,255,255,.08); color:#fff;}
+  .main{flex:1; min-width:0; display:flex; flex-direction:column;}
+  .topbar{padding:20px 32px; border-bottom:1px solid var(--line); background:var(--pearl-sheen), var(--surface); display:flex; align-items:center; justify-content:space-between; position:relative;}
+  .topbar h1{font-size:26px; margin:0;}
+  .topbar .subtitle{font-size:13px; color:var(--ink-soft); margin-top:2px; font-family:'Inter';}
+  .content{padding:28px 32px; flex:1; overflow-y:auto;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .dash-panel{display:none;}
+  .dash-panel.active{display:block;}
+
+  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:26px;}
+  .kpi-card{border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow);
+    background:var(--pearl-sheen), var(--surface); position:relative; overflow:hidden;}
+  .kpi-card::after{content:""; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, var(--accent), rgba(242,128,46,0));}
+  .kpi-label{font-size:12px; color:var(--ink-soft); font-weight:600;}
+  .kpi-num{font-size:36px; margin:6px 0 2px; line-height:1;}
+  .kpi-sub{font-size:12px; color:var(--ink-faint);}
+  .kpi-card.accent-ok .kpi-num{color:var(--ok);}
+  .kpi-card.accent-warn .kpi-num{color:var(--warn);}
+  .kpi-card.accent-danger .kpi-num{color:var(--danger);}
+  .kpi-card.accent-steel .kpi-num{color:var(--steel);}
+
+  .panel{background:var(--pearl-sheen), var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:22px;}
+  .panel-head{padding:16px 20px; border-bottom:1px solid var(--line-soft); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  .panel-head h2{font-size:18px; margin:0;}
+  .panel-body{padding:20px;}
+  .grid-2{display:grid; grid-template-columns:1.3fr 1fr; gap:20px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+
+  .bar-row{display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px;}
+  .bar-label{width:110px; color:var(--ink-soft); flex-shrink:0;}
+  .bar-track{flex:1; background:var(--line-soft); border-radius:6px; height:10px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:6px; background:var(--steel);}
+  .bar-fill.gold{background:linear-gradient(90deg,#F2802E,#FFAE6B);}
+  .bar-val{width:34px; text-align:right; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+  .highlight-card{display:flex; align-items:center; gap:16px; padding:6px 4px;}
+  .highlight-avatar{width:56px; height:56px; border-radius:50%; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:22px; flex-shrink:0; overflow:hidden;}
+  .highlight-avatar img{width:100%;height:100%;object-fit:cover;}
+  .highlight-name{font-size:19px; font-weight:700;}
+  .highlight-sub{font-size:13px; color:var(--ink-soft);}
+
+  .subtabs{display:flex; gap:6px; margin-bottom:18px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+  .subtab{padding:9px 16px; font-size:13px; font-weight:600; color:var(--ink-soft); background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-1px;}
+  .subtab.active{color:var(--brand); border-bottom-color:var(--accent);}
+
+  .toolbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap;}
+  .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .filters select, .filters input{padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-size:13px; background:#fff;}
+
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  thead th{text-align:left; font-size:11px; color:var(--ink-faint); font-weight:700; padding:9px 14px; border-bottom:1px solid var(--line); background:#FAF5EF;}
+  tbody td{padding:11px 14px; border-bottom:1px solid var(--line-soft); vertical-align:middle;}
+  tbody tr:hover{background:#F6F8FD;}
+  .badge{display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:11.5px; font-weight:600; white-space:nowrap;}
+  .badge-ok{background:var(--ok-bg); color:var(--ok);}
+  .badge-warn{background:var(--warn-bg); color:var(--warn);}
+  .badge-danger{background:var(--danger-bg); color:var(--danger);}
+  .badge-neutral{background:var(--line-soft); color:var(--ink-soft);}
+  .badge-info{background:var(--info-bg); color:var(--steel);}
+  .row-actions{display:flex; gap:6px;}
+  .icon-btn{background:none; border:1px solid var(--line); border-radius:6px; width:28px; height:28px; font-size:13px; color:var(--ink-soft);}
+  .icon-btn:hover{background:var(--line-soft);}
+  .icon-btn.go{border-color:var(--ok); color:var(--ok);}
+  .empty-state{padding:40px 20px; text-align:center; color:var(--ink-faint); font-size:13.5px;}
+  .thumb{width:38px; height:38px; border-radius:6px; object-fit:cover; border:1px solid var(--line); cursor:pointer;}
+  .thumb-placeholder{width:38px; height:38px; border-radius:6px; background:var(--line-soft); display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:14px;}
+
+  .modal-backdrop{display:none; position:fixed; inset:0; background:rgba(20,26,33,.5); z-index:50; align-items:center; justify-content:center; padding:20px;}
+  .modal-backdrop.active{display:flex;}
+  .modal{background:#fff; border-radius:12px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,.3); max-height:90vh; overflow-y:auto;}
+  .modal-head{padding:18px 22px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;}
+  .modal-head h3{margin:0; font-size:18px;}
+  .modal-close{background:none; border:none; font-size:18px; color:var(--ink-faint);}
+  .modal-body{padding:20px 22px;}
+  .modal-foot{padding:16px 22px; border-top:1px solid var(--line); display:flex; justify-content:flex-end; gap:10px;}
+
+  .pill-btn{background:var(--steel); color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:13.5px; font-weight:600;}
+  .pill-btn:hover{background:var(--steel-dark);}
+  .pill-btn.warn{background:var(--accent); color:var(--accent-ink);}
+  .clock-btn{padding:12px 22px; font-size:15px; border-radius:9px; font-weight:700;}
+  .clock-display{font-family:'Barlow Condensed'; font-size:44px; color:var(--steel);}
+  .toast{position:fixed; bottom:24px; right:24px; background:var(--ink); color:#fff; padding:12px 18px; border-radius:8px; font-size:13.5px; box-shadow:0 10px 30px rgba(0,0,0,.25); z-index:100; display:none;}
+  .pin-marker{position:absolute; width:22px; height:22px; border-radius:50%; background:var(--accent); color:var(--accent-ink); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; transform:translate(-50%,-50%); box-shadow:0 0 0 2px #fff;}
+  .pin-marker.muted{background:var(--line-soft); color:var(--ink-soft);}
+  .bell-btn{position:relative; width:36px; height:36px; font-size:16px; background:none; border:1px solid var(--line); border-radius:8px; color:var(--ink-soft);}
+  .bell-btn:hover{background:var(--line-soft);}
+  .bell-badge{display:none; position:absolute; top:-5px; right:-5px; background:var(--danger); color:#fff; border-radius:10px; font-size:10px; padding:1px 5px; font-weight:700;}
+  .bell-dropdown{display:none; position:absolute; top:66px; right:32px; background:#fff; border:1px solid var(--line); border-radius:10px; box-shadow:0 14px 40px rgba(0,0,0,.15); width:300px; z-index:60; overflow:hidden;}
+  .bell-dropdown-head{padding:12px 16px; border-bottom:1px solid var(--line-soft); font-weight:700; font-size:13.5px;}
+  .bell-item{padding:10px 16px; border-bottom:1px solid var(--line-soft); font-size:13px;}
+  .toggle-row{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:10px; font-size:13.5px;}
+  .toggle-row .toggle-opts{display:flex; gap:16px;}
+  .toggle-opts label{display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:500; color:var(--ink-soft);}
+  ::-webkit-scrollbar{width:9px; height:9px;}
+  ::-webkit-scrollbar-thumb{background:#DCCFC0; border-radius:6px;}
+
+  /* ===================== MENU DE 3 PONTINHOS (mobile) ===================== */
+  .menu-btn{display:none; width:38px; height:38px; flex-shrink:0; font-size:20px; line-height:1;
+    background:none; border:1px solid var(--line); border-radius:8px; color:var(--ink);
+    align-items:center; justify-content:center;}
+  .menu-btn:hover{background:var(--line-soft);}
+  .drawer-scrim{display:none; position:fixed; inset:0; background:rgba(20,26,33,.5); z-index:40;
+    opacity:0; transition:opacity .2s ease;}
+  .drawer-scrim.show{display:block; opacity:1;}
+  .topbar-left{display:flex; align-items:center; gap:12px; min-width:0;}
+
+  /* ===================== RESPONSIVO ===================== */
+  @media (max-width:1024px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2, .grid-3{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:860px){
+    .menu-btn{display:flex;}
+
+    /* sidebar vira gaveta lateral */
+    .sidebar{position:fixed; top:0; left:0; bottom:0; z-index:45; width:270px; max-width:84vw;
+      transform:translateX(-100%); transition:transform .24s cubic-bezier(.4,0,.2,1);
+      overflow-y:auto; box-shadow:0 0 40px rgba(0,0,0,.4);
+      padding-top:calc(20px + env(safe-area-inset-top));
+      padding-bottom:calc(20px + env(safe-area-inset-bottom));}
+    .sidebar.open{transform:translateX(0);}
+    .nav-item{padding:13px 12px; font-size:15px;}
+
+    .topbar{padding:14px 16px; padding-top:calc(14px + env(safe-area-inset-top));
+      gap:10px; position:sticky; top:0; z-index:30;}
+    .topbar h1{font-size:20px;}
+    .topbar .subtitle{display:none;}
+    #topbar-date{display:none;}
+    .bell-dropdown{top:calc(100% + 4px); right:16px; left:16px; width:auto;}
+
+    .content{padding:18px 16px calc(28px + env(safe-area-inset-bottom));}
+    .kpi-grid{grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:18px;}
+    .kpi-card{padding:14px;}
+    .kpi-num{font-size:28px;}
+    .field-row{grid-template-columns:1fr;}
+    .panel-body{padding:16px;}
+    .panel-head{padding:14px 16px;}
+
+    /* tabelas rolam na horizontal em vez de estourar a tela */
+    .panel > table, .panel-body > table, .panel-body table{
+      display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap;}
+    .subtabs{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+    .subtabs::-webkit-scrollbar{display:none;}
+    .subtab{flex-shrink:0;}
+    .filters{width:100%;}
+    .filters select, .filters input{flex:1 1 140px; min-width:0;}
+    .toolbar{flex-direction:column; align-items:stretch;}
+
+    /* alvos de toque maiores e sem zoom automático no iOS */
+    input, select, textarea{font-size:16px !important;}
+    .icon-btn{width:34px; height:34px;}
+    .btn, .pill-btn{min-height:42px;}
+
+    .gate{padding:16px;}
+    .gate-card{padding:26px 20px 22px;}
+    .modal{max-height:88vh;}
+    .toast{left:16px; right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); text-align:center;}
+  }
+
+  @media (max-width:420px){
+    .kpi-grid{grid-template-columns:1fr;}
+    .topbar h1{font-size:18px;}
+  }
+
+  /* modo app instalado (PWA) */
+  @media (display-mode:standalone){
+    body{overscroll-behavior-y:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= WELCOME ================= -->
+<div class="gate" id="screen-welcome">
+  <div class="gate-card">
+    <div class="brand"><div class="brand-mark"><img src="/logo-mark.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Gestão de Limpeza &amp; Manutenção</div></div></div>
+    <h1>Bem-vindo</h1>
+    <p class="lead">Informe o CNPJ da empresa para entrar.</p>
+    <button class="opt-btn" id="go-join"><div class="opt-icon">🔑</div><div><div class="opt-title">Entrar na minha empresa</div><div class="opt-sub">Já tenho conta e sei o CNPJ</div></div></button>
+    <button class="opt-btn" id="go-invite"><div class="opt-icon">✉️</div><div><div class="opt-title">Ativar minha conta</div><div class="opt-sub">Recebi um código de convite do administrador</div></div></button>
+    <button class="opt-btn" id="go-register"><div class="opt-icon">🏢</div><div><div class="opt-title">Cadastrar minha empresa</div><div class="opt-sub">Primeira vez usando o ASL nesta empresa</div></div></button>
+    <div class="gate-hint">O CNPJ identifica a <b>empresa</b>. Quem identifica <b>você</b> é o seu e-mail e a sua senha.</div>
+    <div style="margin-top:14px; text-align:center; font-size:12px; color:var(--ink-faint);"><a href="/privacidade" style="color:var(--ink-soft);">Política de Privacidade</a> · <a href="/termos" style="color:var(--ink-soft);">Termos de Uso</a></div>
+  </div>
+</div>
+
+<!-- ================= REGISTER COMPANY ================= -->
+<div class="gate" id="screen-register" style="display:none;">
+  <div class="gate-card wide">
+    <button class="back-link" data-back="screen-welcome">← Voltar</button>
+    <div class="brand"><div class="brand-mark"><img src="/logo-mark.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Gestão de Limpeza &amp; Manutenção</div></div></div>
+    <h1>Cadastrar empresa</h1>
+    <p class="lead">Isso cria o espaço da sua empresa e a sua conta de administrador.</p>
+    <div class="error-box" id="register-error"></div>
+    <div class="field"><label>CNPJ</label><input type="text" id="reg-company-cnpj" placeholder="00.000.000/0001-00"></div>
+    <div class="field"><label>Nome da empresa</label><input type="text" id="reg-company-name" placeholder="ex: Hotel Vista Verde"></div>
+    <div class="field"><label>Seu nome (administrador)</label><input type="text" id="reg-admin-name" placeholder="ex: João Silva"></div>
+    <div class="field"><label>Seu e-mail</label><input type="email" id="reg-admin-email" autocomplete="email" placeholder="joao@empresa.com.br"></div>
+    <div class="field"><label>Senha</label><input type="password" id="reg-admin-password" autocomplete="new-password" placeholder="Mínimo 8 caracteres"></div>
+    <label style="display:flex; gap:8px; align-items:flex-start; font-size:13px; color:var(--ink-soft); margin:4px 0 16px;">
+      <input type="checkbox" id="reg-accept" style="margin-top:3px;">
+      <span>Li e aceito os <a href="/termos" target="_blank">Termos de Uso</a> e a <a href="/privacidade" target="_blank">Política de Privacidade</a>.</span>
+    </label>
+    <button class="btn btn-primary" id="reg-submit">Criar empresa e continuar</button>
+  </div>
+</div>
+
+<!-- ================= JOIN COMPANY (CNPJ) ================= -->
+<div class="gate" id="screen-join" style="display:none;">
+  <div class="gate-card">
+    <button class="back-link" data-back="screen-welcome">← Voltar</button>
+    <div class="brand"><div class="brand-mark"><img src="/logo-mark.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Gestão de Limpeza &amp; Manutenção</div></div></div>
+    <h1>CNPJ da empresa</h1>
+    <p class="lead">Digite o CNPJ para confirmarmos de qual empresa você é.</p>
+    <div class="error-box" id="join-error"></div>
+    <div class="field"><label>CNPJ</label><input type="text" id="join-cnpj" inputmode="numeric" placeholder="00.000.000/0001-00"></div>
+    <button class="btn btn-primary" id="join-submit">Continuar</button>
+  </div>
+</div>
+
+<!-- ================= ATIVAR CONTA (CONVITE) ================= -->
+<div class="gate" id="screen-invite" style="display:none;">
+  <div class="gate-card">
+    <button class="back-link" data-back="screen-welcome">← Voltar</button>
+    <div class="brand"><div class="brand-mark"><img src="/logo-mark.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Gestão de Limpeza &amp; Manutenção</div></div></div>
+    <h1>Ativar minha conta</h1>
+    <p class="lead">Use o código que o administrador te passou e crie a sua senha.</p>
+    <div class="error-box" id="invite-error"></div>
+    <div class="field"><label>Código do convite</label><input type="text" id="inv-code" placeholder="ex: K7PQ2MRT" style="text-transform:uppercase;"></div>
+    <div class="field"><label>Seu e-mail</label><input type="email" id="inv-email" autocomplete="email" placeholder="joao@empresa.com.br"></div>
+    <div class="field"><label>Crie uma senha</label><input type="password" id="inv-password" autocomplete="new-password" placeholder="Mínimo 8 caracteres"></div>
+    <button class="btn btn-primary" id="inv-submit">Ativar conta</button>
+    <div class="gate-hint">O e-mail precisa ser exatamente o mesmo que o administrador cadastrou no convite.</div>
+  </div>
+</div>
+
+<!-- ================= LOGIN ================= -->
+<div class="gate" id="screen-login" style="display:none;">
+  <div class="gate-card">
+    <button class="back-link" data-back="screen-welcome">← Trocar empresa</button>
+    <div class="brand"><div class="brand-mark"><img src="/logo-mark.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Gestão de Limpeza &amp; Manutenção</div></div></div>
+    <div class="company-chip"><div class="avatar" id="login-company-avatar">?</div><div><div class="cname" id="login-company-name">—</div><div class="ccode" id="login-company-code">—</div></div></div>
+    <h1>Entrar</h1>
+    <p class="lead">Acesse com o seu e-mail e a sua senha.</p>
+    <div class="error-box" id="login-error">E-mail ou senha inválidos.</div>
+    <form id="login-form">
+      <div class="field"><label>E-mail</label><input type="email" id="login-user" autocomplete="username" required></div>
+      <div class="field"><label>Senha</label><input type="password" id="login-pass" autocomplete="current-password" required></div>
+      <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+    <button class="back-link" id="forgot-pass" style="margin-top:14px;">Esqueci minha senha</button>
+  </div>
+</div>
+
+<!-- ================= SHIFT START PHOTO ================= -->
+<div class="gate" id="screen-shift-photo" style="display:none;">
+  <div class="gate-card">
+    <div class="brand"><div class="brand-mark"><img src="/logo-mark.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Início de expediente</div></div></div>
+    <h1>Tire uma foto para começar</h1>
+    <p class="lead">Confirma que é você iniciando o turno hoje. Essa foto fica anexada ao seu ponto do dia.</p>
+    <div class="field" id="shift-turno-wrap"><label>Seu turno hoje</label><select id="shift-turno-select"></select></div>
+    <div class="photo-box">
+      <div id="shift-photo-placeholder" class="photo-placeholder">📷</div>
+      <img id="shift-photo-preview" class="photo-preview" style="display:none;">
+      <input type="file" accept="image/*" capture="user" id="shift-photo-input" style="display:none;">
+      <button class="btn btn-ghost" id="shift-photo-trigger" style="width:100%;">Abrir câmera</button>
+    </div>
+    <button class="btn btn-primary" id="shift-photo-confirm" disabled>Confirmar e começar o turno</button>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app">
+<div class="drawer-scrim" id="drawer-scrim"></div>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark" style="background:rgba(255,255,255,.10); box-shadow:none;"><img src="/logo-mark-light.png" alt=""></div><div><div class="brand-name">ASL</div><div class="brand-sub">Limpeza &amp; Manutenção</div></div></div>
+    <div class="sidebar-company"><b id="side-company-name">—</b><br>Código: <span id="side-company-code">—</span></div>
+    <button class="nav-item" data-view="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
+    <button class="nav-item" data-view="checklist"><span class="nav-icon">☑</span> Checklists</button>
+    <button class="nav-item" data-view="ponto"><span class="nav-icon">◷</span> Folha de Ponto</button>
+    <button class="nav-item" data-view="aprovacoes" id="nav-aprovacoes"><span class="nav-icon">✅</span> Aprovações</button>
+    <button class="nav-item" data-view="relatorios"><span class="nav-icon">▤</span> Relatórios</button>
+    <button class="nav-item" data-view="usuarios" id="nav-usuarios"><span class="nav-icon">◉</span> Usuários</button>
+    <button class="nav-item" data-view="configuracoes" id="nav-configuracoes"><span class="nav-icon">⚙</span> Configurações</button>
+    <div class="nav-spacer"></div>
+    <div class="sidebar-footer">
+      <div class="user-chip"><div class="avatar" id="side-avatar">A</div><div><div class="user-chip-name" id="side-name">—</div><div class="user-chip-role" id="side-role">—</div></div></div>
+      <button class="logout-btn" id="logout-btn">Sair</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="sidebar">⋮</button>
+        <div><h1 id="topbar-title">Dashboard</h1><div class="subtitle" id="topbar-sub">Visão geral da operação de hoje</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button class="bell-btn" id="bell-btn">🔔<span class="bell-badge" id="bell-badge"></span></button>
+        <div id="topbar-date" style="font-size:13px;color:var(--ink-soft);"></div>
+      </div>
+      <div class="bell-dropdown" id="bell-dropdown">
+        <div class="bell-dropdown-head">Alertas</div>
+        <div id="bell-list"></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div class="view" id="view-dashboard">
+        <div class="subtabs">
+          <button class="subtab active" data-dash="geral">Visão Geral da Empresa</button>
+          <button class="subtab" data-dash="checklist">Checklist</button>
+          <button class="subtab" data-dash="ponto">Ponto</button>
+        </div>
+
+        <div class="dash-panel active" id="dash-panel-geral">
+          <div class="kpi-grid">
+            <div class="kpi-card accent-ok"><div class="kpi-label">Conclusão do checklist</div><div class="kpi-num" id="g-kpi-rate">0%</div><div class="kpi-sub">tarefas concluídas / total</div></div>
+            <div class="kpi-card accent-steel"><div class="kpi-label">Pontualidade hoje</div><div class="kpi-num" id="g-kpi-punct">0%</div><div class="kpi-sub">entradas dentro do turno</div></div>
+            <div class="kpi-card accent-warn"><div class="kpi-label">Desperdícios (mês)</div><div class="kpi-num" id="g-kpi-waste">0</div><div class="kpi-sub">registros no mês atual</div></div>
+            <div class="kpi-card accent-danger"><div class="kpi-label">Tarefas atrasadas</div><div class="kpi-num" id="g-kpi-late">0</div><div class="kpi-sub">requerem atenção</div></div>
+          </div>
+          <div class="grid-2">
+            <div class="panel"><div class="panel-head"><h2>🏆 Funcionário destaque</h2></div><div class="panel-body" id="g-highlight"></div></div>
+            <div class="panel"><div class="panel-head"><h2>Ranking de desempenho</h2></div><div class="panel-body" id="g-ranking"></div></div>
+          </div>
+        </div>
+
+        <div class="dash-panel" id="dash-panel-checklist">
+          <div class="kpi-grid">
+            <div class="kpi-card accent-ok"><div class="kpi-label">Concluídas hoje</div><div class="kpi-num" id="kpi-done">0</div><div class="kpi-sub">tarefas finalizadas</div></div>
+            <div class="kpi-card accent-warn"><div class="kpi-label">Pendentes</div><div class="kpi-num" id="kpi-pending">0</div><div class="kpi-sub">aguardando execução</div></div>
+            <div class="kpi-card accent-danger"><div class="kpi-label">Atrasadas</div><div class="kpi-num" id="kpi-late">0</div><div class="kpi-sub">fora do prazo</div></div>
+            <div class="kpi-card accent-steel"><div class="kpi-label">Aguardando aprovação</div><div class="kpi-num" id="kpi-pendappr">0</div><div class="kpi-sub">enviadas por colaboradores</div></div>
+          </div>
+          <div class="grid-2">
+            <div class="panel"><div class="panel-head"><h2>Tarefas por área</h2></div><div class="panel-body" id="dash-bars"></div></div>
+            <div class="panel"><div class="panel-head"><h2>Programação da semana</h2></div><div class="panel-body" id="dash-week"></div></div>
+          </div>
+          <div class="panel"><div class="panel-head"><h2>Atividade recente (aprovadas)</h2></div><div class="panel-body" style="padding:0;"><table><tbody id="dash-activity"></tbody></table></div></div>
+        </div>
+
+        <div class="dash-panel" id="dash-panel-ponto">
+          <div class="kpi-grid">
+            <div class="kpi-card accent-ok"><div class="kpi-label">No ponto agora</div><div class="kpi-num" id="p-kpi-active">0</div><div class="kpi-sub">turnos em andamento</div></div>
+            <div class="kpi-card accent-steel"><div class="kpi-label">Jornadas fechadas hoje</div><div class="kpi-num" id="p-kpi-closed">0</div><div class="kpi-sub">com entrada e saída</div></div>
+            <div class="kpi-card accent-warn"><div class="kpi-label">Média de horas hoje</div><div class="kpi-num" id="p-kpi-avg">0h</div><div class="kpi-sub">por colaborador</div></div>
+            <div class="kpi-card accent-danger"><div class="kpi-label">Sem bater saída</div><div class="kpi-num" id="p-kpi-open">0</div><div class="kpi-sub">turnos ainda abertos</div></div>
+          </div>
+          <div class="panel"><div class="panel-head"><h2>Horas trabalhadas hoje por colaborador</h2></div><div class="panel-body" id="p-bars"></div></div>
+        </div>
+      </div>
+
+      <!-- ===== CHECKLIST ===== -->
+      <div class="view" id="view-checklist">
+        <div class="subtabs" id="checklist-subtabs">
+          <button class="subtab active" data-type="todos">Todas</button>
+          <button class="subtab" data-type="limpeza">Limpeza</button>
+          <button class="subtab" data-type="manutencao">Manutenção</button>
+          <button class="subtab" data-type="desperdicio" id="subtab-desperdicio">Desperdício</button>
+        </div>
+
+        <div id="checklist-tasks-section">
+          <div class="toolbar">
+            <div class="filters">
+              <select id="filter-status">
+                <option value="todos">Todos os status</option>
+                <option value="pendente">Pendente</option>
+                <option value="aguardando_aprovacao">Aguardando aprovação</option>
+                <option value="concluido">Concluído</option>
+                <option value="atrasado">Atrasado</option>
+              </select>
+              <select id="filter-area"><option value="todos">Todas as áreas</option></select>
+              <select id="filter-shift"><option value="todos">Todos os turnos</option></select>
+              <input type="text" id="filter-search" placeholder="Buscar tarefa...">
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-ghost" id="btn-new-image-checklist" style="width:auto;">🖼 Checklist por imagem</button>
+              <button class="pill-btn" id="btn-new-task">+ Nova tarefa</button>
+            </div>
+          </div>
+          <div class="panel">
+            <table>
+              <thead><tr><th style="width:44px;"></th><th>Tarefa</th><th>Área</th><th>Responsável</th><th>Turno</th><th>Prazo</th><th>Status</th><th style="width:70px;" id="th-actions"></th></tr></thead>
+              <tbody id="checklist-table"></tbody>
+            </table>
+            <div class="empty-state" id="checklist-empty" style="display:none;">Nenhuma tarefa encontrada com esses filtros.</div>
+          </div>
+        </div>
+
+        <div id="checklist-waste-section" style="display:none;">
+          <div class="toolbar">
+            <div class="filters"><input type="date" id="waste-filter-date"></div>
+            <button class="pill-btn warn" id="btn-new-waste">📷 Registrar desperdício</button>
+          </div>
+          <div class="panel">
+            <table>
+              <thead><tr><th style="width:52px;">Foto</th><th>Item</th><th>Quantidade</th><th>Motivo</th><th>Registrado por</th><th>Data</th><th style="width:40px;"></th></tr></thead>
+              <tbody id="waste-table"></tbody>
+            </table>
+            <div class="empty-state" id="waste-empty" style="display:none;">Nenhum desperdício registrado ainda.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PONTO ===== -->
+      <div class="view" id="view-ponto">
+        <div class="grid-2" style="margin-bottom:22px;">
+          <div class="panel">
+            <div class="panel-head"><h2>Meu ponto</h2></div>
+            <div class="panel-body" style="text-align:center; padding:30px 20px;">
+              <div class="clock-display" id="clock-now">--:--:--</div>
+              <div style="color:var(--ink-soft); font-size:13px; margin:6px 0 20px;" id="clock-status">Você ainda não bateu o ponto hoje.</div>
+              <button class="btn btn-accent clock-btn" id="btn-clock">Bater ponto (Entrada)</button>
+            </div>
+          </div>
+          <div class="panel"><div class="panel-head"><h2>Resumo de hoje</h2></div><div class="panel-body" id="ponto-resumo-hoje"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Registros</h2>
+            <div class="filters">
+              <select id="ponto-filter-user"><option value="todos">Todos os colaboradores</option></select>
+              <input type="date" id="ponto-filter-date">
+            </div>
+          </div>
+          <table><thead><tr><th style="width:52px;">Foto</th><th>Colaborador</th><th>Turno</th><th>Local</th><th>Data</th><th>Entrada</th><th>Saída</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody id="ponto-table"></tbody>
+          </table>
+          <div class="empty-state" id="ponto-empty" style="display:none;">Nenhum registro de ponto ainda.</div>
+        </div>
+      </div>
+
+      <!-- ===== APROVACOES ===== -->
+      <div class="view" id="view-aprovacoes">
+        <div class="panel">
+          <div class="panel-head"><h2>Checklists aguardando aprovação</h2></div>
+          <table><thead><tr><th style="width:52px;">Foto</th><th>Colaborador</th><th>Tarefa</th><th>Área</th><th>Data</th><th>Hora</th><th>Observação</th><th style="width:110px;"></th></tr></thead>
+            <tbody id="approvals-table"></tbody>
+          </table>
+          <div class="empty-state" id="approvals-empty" style="display:none;">Nenhuma aprovação pendente.</div>
+        </div>
+      </div>
+
+      <!-- ===== RELATORIOS ===== -->
+      <div class="view" id="view-relatorios">
+        <div class="grid-3">
+          <div class="panel">
+            <div class="panel-head"><h2>Checklists</h2></div>
+            <div class="panel-body">
+              <p style="font-size:13.5px; color:var(--ink-soft); margin-top:0;">Exporta tarefas cadastradas com status atual em .CSV.</p>
+              <div class="field" style="margin-bottom:10px;"><label>Tipo</label><select id="rep-checklist-type"><option value="todos">Todos</option><option value="limpeza">Limpeza</option><option value="manutencao">Manutenção</option></select></div>
+              <div class="field" style="margin-bottom:14px;"><label>Status</label><select id="rep-checklist-status"><option value="todos">Todos</option><option value="pendente">Pendente</option><option value="aguardando_aprovacao">Aguardando aprovação</option><option value="concluido">Concluído</option><option value="atrasado">Atrasado</option></select></div>
+              <button class="pill-btn" id="btn-export-checklist">⬇ Exportar CSV</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Folha de Ponto</h2></div>
+            <div class="panel-body">
+              <p style="font-size:13.5px; color:var(--ink-soft); margin-top:0;">Exporta entrada/saída e total de horas em .CSV.</p>
+              <div class="field" style="margin-bottom:10px;"><label>De</label><input type="date" id="rep-ponto-from"></div>
+              <div class="field" style="margin-bottom:14px;"><label>Até</label><input type="date" id="rep-ponto-to"></div>
+              <button class="pill-btn" id="btn-export-ponto">⬇ Exportar CSV</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Desperdício</h2></div>
+            <div class="panel-body">
+              <p style="font-size:13.5px; color:var(--ink-soft); margin-top:0;">Exporta item, quantidade e motivo em .CSV.</p>
+              <div class="field" style="margin-bottom:10px;"><label>De</label><input type="date" id="rep-waste-from"></div>
+              <div class="field" style="margin-bottom:14px;"><label>Até</label><input type="date" id="rep-waste-to"></div>
+              <button class="pill-btn" id="btn-export-waste">⬇ Exportar CSV</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Finalizações do checklist — por colaborador e data</h2></div>
+          <div class="panel-body">
+            <p style="font-size:13.5px; color:var(--ink-soft); margin-top:0;">Escolha um colaborador e um dia (ou um período) para ver exatamente o que foi enviado, com foto, status de aprovação e observação.</p>
+            <div class="filters" style="margin-bottom:16px;">
+              <select id="comp-filter-user"><option value="todos">Todos os colaboradores</option></select>
+              <input type="date" id="comp-filter-date" title="Dia específico">
+              <span style="font-size:12px;color:var(--ink-faint);">ou período:</span>
+              <input type="date" id="comp-filter-from" title="De">
+              <input type="date" id="comp-filter-to" title="Até">
+              <button class="btn btn-ghost" id="comp-filter-clear" style="width:auto;">Limpar</button>
+              <button class="pill-btn" id="btn-export-completions" style="width:auto;">⬇ Exportar CSV</button>
+            </div>
+            <table><thead><tr><th style="width:52px;">Foto</th><th>Colaborador</th><th>Data</th><th>Hora</th><th>Tarefa</th><th>Área</th><th>Status</th><th>Observação</th></tr></thead>
+              <tbody id="comp-table"></tbody>
+            </table>
+            <div class="empty-state" id="comp-empty" style="display:none;">Nenhuma finalização encontrada com esses filtros.</div>
+          </div>
+        </div>
+
+        <div class="panel"><div class="panel-head"><h2>Visão geral por função</h2></div><div class="panel-body" id="role-report"></div></div>
+        <div class="panel"><div class="panel-head"><h2>Resumo executivo</h2></div><div class="panel-body" id="rep-summary" style="font-size:13.5px; color:var(--ink-soft);"></div></div>
+      </div>
+
+      <!-- ===== USUARIOS ===== -->
+      <div class="view" id="view-usuarios">
+        <div class="panel">
+          <div class="panel-head"><h2>Turnos da empresa</h2><button class="pill-btn" id="btn-new-shift" style="width:auto;">+ Novo turno</button></div>
+          <table><thead><tr><th>Nome do turno</th><th>Início</th><th>Fim</th><th style="width:40px;"></th></tr></thead><tbody id="shifts-table"></tbody></table>
+        </div>
+        <div class="toolbar"><div></div><button class="pill-btn" id="btn-new-user">+ Novo usuário</button></div>
+        <div class="panel">
+          <table><thead><tr><th>Nome</th><th>Usuário</th><th>Função</th><th>Turno</th><th>Cargo/Área</th><th style="width:70px;"></th></tr></thead>
+            <tbody id="usuarios-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== CONFIGURACOES ===== -->
+      <div class="view" id="view-configuracoes">
+        <div class="panel">
+          <div class="panel-head"><h2>Permissões por função</h2></div>
+          <div class="panel-body">
+            <p style="font-size:13.5px;color:var(--ink-soft);margin-top:0;">Administradores sempre têm acesso total. Ajuste o que Gestores e Colaboradores podem fazer no sistema.</p>
+            <table id="perm-table"></table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Alertas e lembretes</h2></div>
+          <div class="panel-body" id="alerts-config"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Cerca digital (geofence)</h2></div>
+          <div class="panel-body">
+            <p style="font-size:13.5px;color:var(--ink-soft);margin-top:0;">Quando ativa, o sistema tenta confirmar se o colaborador está dentro da área definida no momento em que tira a foto de início de expediente.</p>
+            <div class="field" style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="geo-enabled" style="width:auto;"><label style="margin:0;" for="geo-enabled">Ativar cerca digital ao bater ponto</label></div>
+            <div class="field-row">
+              <div class="field"><label>Latitude do centro</label><input type="text" id="geo-lat" readonly></div>
+              <div class="field"><label>Longitude do centro</label><input type="text" id="geo-lng" readonly></div>
+            </div>
+            <div class="field"><label>Raio permitido (metros)</label><input type="number" id="geo-radius" value="150"></div>
+            <button class="btn btn-ghost" id="geo-capture" style="width:auto; margin-bottom:14px;">📍 Usar minha localização atual como centro</button><br>
+            <button class="pill-btn" id="geo-save">Salvar cerca digital</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ================= MODAL: TASK ================= -->
+<div class="modal-backdrop" id="modal-task">
+  <div class="modal">
+    <div class="modal-head"><h3 id="task-modal-title">Nova tarefa</h3><button class="modal-close" data-close="modal-task">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="task-id">
+      <div class="field"><label>Título da tarefa</label><input type="text" id="task-title" placeholder="ex: Arrumar salão"></div>
+      <div class="field-row">
+        <div class="field"><label>Tipo</label><select id="task-type"><option value="limpeza">Limpeza</option><option value="manutencao">Manutenção</option></select></div>
+        <div class="field"><label>Prioridade</label><select id="task-priority"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baixa">Baixa</option></select></div>
+      </div>
+      <div class="field"><label>Área / Local</label><input type="text" id="task-area" placeholder="ex: Salão, Cozinha, Casa de máquinas"></div>
+      <div class="field-row">
+        <div class="field"><label>Responsável</label><select id="task-responsible"></select></div>
+        <div class="field"><label>Turno</label><select id="task-shift"></select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Frequência</label><select id="task-frequency"><option value="unica">Única</option><option value="diaria">Diária</option><option value="semanal">Semanal</option><option value="mensal">Mensal</option></select></div>
+        <div class="field"><label>Prazo</label><input type="date" id="task-due"></div>
+      </div>
+      <div class="field"><label>Observações (opcional)</label><textarea id="task-notes" rows="2"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close="modal-task">Cancelar</button><button class="btn btn-primary" style="width:auto;" id="task-save">Salvar tarefa</button></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: COMPLETE TASK ================= -->
+<div class="modal-backdrop" id="modal-complete">
+  <div class="modal">
+    <div class="modal-head"><h3>Concluir tarefa</h3><button class="modal-close" data-close="modal-complete">✕</button></div>
+    <div class="modal-body">
+      <p id="complete-task-title" style="font-weight:700; font-size:15px; margin-top:0;"></p>
+      <p style="font-size:12.5px; color:var(--ink-faint); margin-top:-8px;">A conclusão será enviada para aprovação de um supervisor.</p>
+      <div class="field"><label>Foto da tarefa concluída (opcional)</label>
+        <div class="photo-box" style="padding:14px;">
+          <div id="complete-photo-placeholder" class="photo-placeholder" style="width:80px;height:80px;font-size:26px;">📷</div>
+          <img id="complete-photo-preview" class="photo-preview" style="max-width:180px; display:none;">
+          <input type="file" accept="image/*" capture="environment" id="complete-photo-input" style="display:none;">
+          <button class="btn btn-ghost" id="complete-photo-trigger" style="width:100%;">Anexar foto</button>
+        </div>
+      </div>
+      <div class="field"><label>Observação (opcional)</label><input type="text" id="complete-notes"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close="modal-complete">Cancelar</button><button class="btn btn-primary" style="width:auto;" id="complete-save">Enviar para aprovação</button></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: WASTE ================= -->
+<div class="modal-backdrop" id="modal-waste">
+  <div class="modal">
+    <div class="modal-head"><h3>Registrar desperdício</h3><button class="modal-close" data-close="modal-waste">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label>O que foi desperdiçado</label><input type="text" id="waste-item" placeholder="ex: Arroz, toalhas, sabão..."></div>
+      <div class="field-row">
+        <div class="field"><label>Quantidade</label><input type="text" id="waste-qty" placeholder="ex: 2"></div>
+        <div class="field"><label>Unidade</label><select id="waste-unit"><option value="kg">kg</option><option value="g">g</option><option value="l">litros</option><option value="un">unidade(s)</option><option value="pct">pacote(s)</option></select></div>
+      </div>
+      <div class="field"><label>Motivo</label>
+        <select id="waste-reason">
+          <option value="Vencido/estragado">Vencido / estragado</option>
+          <option value="Erro de preparo">Erro de preparo ou produção</option>
+          <option value="Queda/quebra">Queda ou quebra</option>
+          <option value="Sobra de produção">Sobra de produção</option>
+          <option value="Erro de pedido">Erro de pedido/serviço</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="field" id="waste-reason-other-wrap" style="display:none;"><label>Descreva o motivo</label><input type="text" id="waste-reason-other"></div>
+      <div class="field"><label>Foto do desperdício</label>
+        <div class="photo-box" style="padding:14px;">
+          <div id="waste-photo-placeholder" class="photo-placeholder" style="width:80px;height:80px;font-size:26px;">📷</div>
+          <img id="waste-photo-preview" class="photo-preview" style="max-width:180px; display:none;">
+          <input type="file" accept="image/*" capture="environment" id="waste-photo-input" style="display:none;">
+          <button class="btn btn-ghost" id="waste-photo-trigger" style="width:100%;">Anexar foto</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close="modal-waste">Cancelar</button><button class="btn btn-primary" style="width:auto;" id="waste-save">Salvar registro</button></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: USER ================= -->
+<div class="modal-backdrop" id="modal-user">
+  <div class="modal">
+    <div class="modal-head"><h3>Novo funcionário</h3><button class="modal-close" data-close="modal-user">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Nome completo</label><input type="text" id="user-name"></div>
+      <div class="field"><label>E-mail</label><input type="email" id="user-email" placeholder="joao@empresa.com.br"></div>
+      <div class="field-row">
+        <div class="field"><label>Função</label><select id="user-role"><option value="colaborador">Colaborador</option><option value="gestor">Gestor</option><option value="admin">Administrador</option></select></div>
+        <div class="field"><label>Turno</label><select id="user-shift"></select></div>
+      </div>
+      <div class="field"><label>Cargo/Área</label><input type="text" id="user-position" placeholder="ex: Limpeza, Manutenção"></div>
+      <div class="field-hint">Não criamos senha para ninguém. O sistema gera um código de convite; o funcionário ativa a conta e escolhe a própria senha.</div>
+      <div id="invite-result" style="display:none; margin-top:12px; padding:14px; border-radius:8px; background:var(--line-soft); text-align:center;"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close="modal-user">Fechar</button><button class="btn btn-primary" style="width:auto;" id="user-save">Gerar convite</button></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: SHIFT ================= -->
+<div class="modal-backdrop" id="modal-shift">
+  <div class="modal">
+    <div class="modal-head"><h3>Novo turno</h3><button class="modal-close" data-close="modal-shift">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Nome do turno</label><input type="text" id="shift-name" placeholder="ex: Manhã"></div>
+      <div class="field-row"><div class="field"><label>Início</label><input type="time" id="shift-start"></div><div class="field"><label>Fim</label><input type="time" id="shift-end"></div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close="modal-shift">Cancelar</button><button class="btn btn-primary" style="width:auto;" id="shift-save">Salvar turno</button></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: IMAGE CHECKLIST BUILDER ================= -->
+<div class="modal-backdrop" id="modal-imgchecklist">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head"><h3>Checklist por imagem</h3><button class="modal-close" data-close="modal-imgchecklist">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Título do checklist</label><input type="text" id="ic-title" placeholder="ex: Organização da cozinha"></div>
+      <div class="field-row">
+        <div class="field"><label>Tipo</label><select id="ic-type"><option value="limpeza">Limpeza</option><option value="manutencao">Manutenção</option></select></div>
+        <div class="field"><label>Área</label><input type="text" id="ic-area" placeholder="ex: Cozinha"></div>
+      </div>
+      <div class="field"><label>Imagem de referência</label>
+        <div class="photo-box" style="padding:10px;">
+          <div id="ic-placeholder" style="color:var(--ink-faint); font-size:13px; padding:20px;">Nenhuma imagem selecionada</div>
+          <div id="ic-image-wrap" style="position:relative; display:none; max-width:100%; cursor:crosshair;"></div>
+          <input type="file" accept="image/*" id="ic-image-input" style="display:none;">
+          <button class="btn btn-ghost" id="ic-image-trigger" style="width:100%; margin-top:8px;">Selecionar imagem</button>
+        </div>
+        <div class="field-hint">Depois de carregar a imagem, clique nos pontos da foto para marcar cada item do checklist.</div>
+      </div>
+      <div id="ic-pins-list"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close="modal-imgchecklist">Cancelar</button><button class="btn btn-primary" style="width:auto;" id="ic-save">Criar checklist</button></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: IMAGE CHECKLIST VIEW ================= -->
+<div class="modal-backdrop" id="modal-imgview">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head"><h3 id="icv-title">Checklist por imagem</h3><button class="modal-close" data-close="modal-imgview">✕</button></div>
+    <div class="modal-body"><div id="icv-image-wrap" style="position:relative;"></div></div>
+  </div>
+</div>
+
+<!-- ================= MODAL: IMAGE VIEW ================= -->
+<div class="modal-backdrop" id="modal-image">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-head"><h3>Foto</h3><button class="modal-close" data-close="modal-image">✕</button></div>
+    <div class="modal-body" style="text-align:center;"><img id="image-view-img" style="max-width:100%; border-radius:8px;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="/vendor/supabase.js"></script>
+<script src="/config.js"></script>
+<script src="/opera-db.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

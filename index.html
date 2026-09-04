@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASL Consultoria.IA — padrão de operação para restaurantes e pousadas</title>
+<meta name="description" content="Checklist, ponto e evidência de execução em um sistema só. Cada tarefa fecha com foto, horário e responsável. Feito para restaurantes, pousadas e hotéis.">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ASL Consultoria.IA">
+<meta property="og:title" content="ASL Consultoria.IA — padrão de operação para restaurantes e pousadas">
+<meta property="og:description" content="Checklist, ponto e evidência de execução em um sistema só. Cada tarefa fecha com foto, horário e responsável.">
+<meta property="og:image" content="/icon-512.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* azul do wordmark ASL, medido do arquivo original */
+    --blue:#354EAB;
+    --blue-deep:#16265A;
+    --blue-abyss:#0D1733;
+    --blue-line:rgba(140,168,235,.22);
+
+    /* neutros frios, alinhados ao app */
+    --sand:#F6F8FD;
+    --surface:#FFFFFF;
+    --ink:#16265A;
+    --ink-soft:#4C5C8A;
+    --ink-faint:#8C9BC4;
+    --amber:#F2802E;
+    --line:#DCE3F0;
+
+    --ok:#3FBF8F;
+    --radius:14px;
+    --measure:62ch;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink); background:var(--sand);
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+  }
+  h1,h2,h3{font-family:'Barlow Condensed',sans-serif; font-weight:600; line-height:1.08; letter-spacing:.2px;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  :focus-visible{outline:3px solid var(--amber); outline-offset:3px; border-radius:4px;}
+
+  .wrap{width:min(1080px, 100% - 40px); margin-inline:auto;}
+
+  /* ---------- topo ---------- */
+  .top{
+    position:sticky; top:0; z-index:20;
+    background:rgba(13,23,51,.92); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--blue-line);
+  }
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px;}
+  .logo{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff;}
+  .logo .logo-chip{
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:9px; background:#fff;
+    box-shadow:0 1px 2px rgba(0,0,0,.15);
+  }
+  .logo .logo-chip img{width:20px; height:20px;}
+  .logo b{font-family:'Barlow Condensed',sans-serif; font-size:21px; font-weight:700; letter-spacing:.6px;}
+  .logo span{color:#9FB4E8; font-weight:500;}
+  .top nav{display:flex; align-items:center; gap:26px;}
+  .top nav a{color:#C4D2F2; text-decoration:none; font-size:14.5px;}
+  .top nav a:hover{color:#fff;}
+
+  .btn{
+    display:inline-block; border:0; border-radius:10px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:15px; font-weight:600;
+    padding:13px 22px; text-decoration:none; text-align:center;
+    transition:background .16s ease, transform .16s ease;
+  }
+  .btn-solid{background:var(--amber); color:#16265A;}
+  .btn-solid:hover{background:#FF9243;}
+  .btn-ghost{background:transparent; color:#fff; box-shadow:inset 0 0 0 1.5px rgba(190,209,250,.45);}
+  .btn-ghost:hover{background:rgba(190,209,250,.12);}
+  .btn-sm{padding:9px 16px; font-size:14px;}
+
+  /* ---------- herói ---------- */
+  .hero{
+    background:
+      radial-gradient(120% 90% at 88% -10%, rgba(53,78,171,.55) 0%, rgba(13,23,51,0) 62%),
+      linear-gradient(180deg, var(--blue-abyss) 0%, var(--blue-deep) 100%);
+    color:#EDF1FB; padding:76px 0 84px;
+  }
+  .hero .wrap{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center;}
+  .hero h1{font-size:clamp(38px, 5.4vw, 61px); color:#fff; margin-bottom:20px; max-width:15ch;}
+  .hero p{font-size:18px; color:#BFCDEC; max-width:46ch; margin-bottom:30px;}
+  .hero-actions{display:flex; gap:12px; flex-wrap:wrap;}
+  .hero-note{margin-top:22px; font-size:13.5px; color:#8FA4D6;}
+
+  /* o cartão de registro: o objeto que o produto entrega */
+  .proof{
+    background:var(--surface); border-radius:18px; overflow:hidden;
+    box-shadow:0 26px 60px rgba(6,12,32,.5);
+    transform:rotate(-1.2deg);
+  }
+  .proof-photo{
+    height:172px; position:relative;
+    background:linear-gradient(150deg,#243C6E 0%, #4A6396 55%, #6E86B8 100%);
+  }
+  .proof-photo::after{
+    content:"foto do turno"; position:absolute; left:16px; bottom:14px;
+    font-size:12px; color:rgba(255,255,255,.72); letter-spacing:.4px;
+  }
+  .proof-body{padding:20px 22px 22px;}
+  .proof-title{font-family:'Barlow Condensed',sans-serif; font-size:25px; color:var(--ink); line-height:1.15;}
+  .proof-area{font-size:13px; color:var(--ink-faint); margin-top:2px;}
+  .proof-rows{margin-top:16px; border-top:1px solid var(--line);}
+  .proof-row{display:flex; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:1px solid #F0EAE1; font-size:14px;}
+  .proof-row dt{color:var(--ink-soft);}
+  .proof-row dd{color:var(--ink); font-weight:600; text-align:right;}
+  .stamp{
+    display:inline-flex; align-items:center; gap:8px; margin-top:16px;
+    background:#E4F2EB; color:#1F6647; border-radius:999px;
+    padding:8px 15px; font-size:13.5px; font-weight:600;
+  }
+  .stamp i{width:8px; height:8px; border-radius:50%; background:var(--ok); font-style:normal;}
+
+  /* ---------- lista de resultados (fundo escuro) ---------- */
+  .results{background:var(--blue-abyss); color:#E7EDFA; padding:80px 0;}
+  .results h2{font-size:clamp(30px,3.6vw,42px); color:#fff; max-width:20ch; margin-bottom:8px;}
+  .results .lede{color:#93A7D6; max-width:52ch; margin-bottom:38px; font-size:16.5px;}
+  .result-list{display:grid; gap:14px; max-width:760px;}
+  .result{
+    display:flex; gap:15px; align-items:flex-start;
+    background:linear-gradient(180deg, rgba(53,78,171,.20), rgba(53,78,171,.07));
+    border:1px solid var(--blue-line); border-radius:var(--radius);
+    padding:19px 22px;
+  }
+  .result svg{flex:0 0 auto; margin-top:2px;}
+  .result p{font-size:16px; color:#D6E0F6; max-width:var(--measure);}
+  .result b{color:#fff; font-weight:600;}
+
+  /* ---------- como funciona ---------- */
+  .how{padding:84px 0; background:var(--sand);}
+  .how h2{font-size:clamp(30px,3.6vw,42px); max-width:18ch; margin-bottom:36px;}
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; counter-reset:s;}
+  .step{border-top:2px solid var(--blue); padding-top:18px;}
+  .step-photo{width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:var(--radius); margin-bottom:16px; box-shadow:var(--shadow, 0 6px 20px rgba(13,23,51,.10));}
+  .step::before{
+    counter-increment:s; content:counter(s);
+    font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700;
+    color:var(--blue); display:block; margin-bottom:6px;
+  }
+  .step h3{font-size:23px; margin-bottom:8px;}
+  .step p{font-size:15px; color:var(--ink-soft);}
+
+  /* ---------- segmentos ---------- */
+  .segments{padding:0 0 84px; background:var(--sand);}
+  .segments h2{font-size:clamp(28px,3.2vw,38px); margin-bottom:10px;}
+  .segments .lede{color:var(--ink-soft); max-width:56ch; margin-bottom:30px;}
+  .seg-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  .seg{
+    display:block; text-decoration:none; color:inherit;
+    background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); overflow:hidden;
+    box-shadow:0 1px 2px rgba(13,23,51,.05), 0 6px 20px rgba(13,23,51,.05);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  a.seg:hover, a.seg:focus-visible{transform:translateY(-2px); box-shadow:0 10px 26px rgba(13,23,51,.12);}
+  .seg-photo{width:100%; aspect-ratio:16/10; object-fit:cover; display:block;}
+  .seg-body{padding:22px 24px 24px;}
+  .seg h3{font-size:24px; color:var(--blue); margin-bottom:10px;}
+  .seg p{font-size:15px; color:var(--ink-soft); margin-bottom:14px;}
+  .seg ul{list-style:none; display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px;}
+  .seg li{
+    font-size:13px; color:var(--ink-soft);
+    background:var(--sand); border-radius:7px; padding:5px 11px;
+  }
+  .seg-link{font-size:14px; font-weight:600; color:var(--blue);}
+
+  /* ---------- fechamento ---------- */
+  .cta{background:var(--blue-abyss); color:#EAF0FF; padding:74px 0;}
+  .cta .wrap{display:flex; align-items:center; justify-content:space-between; gap:36px; flex-wrap:wrap;}
+  .cta h2{font-size:clamp(29px,3.4vw,40px); color:#fff; max-width:17ch;}
+  .cta p{color:#B9C6E6; margin-top:10px; max-width:44ch;}
+  .cta-actions{display:flex; flex-direction:column; align-items:flex-start; gap:12px;}
+  .cta .btn-solid{background:var(--amber); color:#16265A;}
+  .cta .btn-solid:hover{background:#FF9243;}
+  .cta-email{font-size:14px; color:#9FB4E8; text-decoration:none;}
+  .cta-email:hover{color:#fff;}
+
+  footer{background:var(--blue-abyss); color:#8FA4D6; padding:38px 0; font-size:14px;}
+  footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; align-items:center;}
+  footer a{color:#C4D2F2; text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+
+  @media (max-width:880px){
+    .hero{padding:56px 0 64px;}
+    .hero .wrap{grid-template-columns:1fr; gap:42px;}
+    .proof{transform:none; max-width:420px;}
+    .steps{grid-template-columns:1fr; gap:30px;}
+    .seg-grid{grid-template-columns:1fr;}
+    .top nav a:not(.btn){display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="/">
+      <span class="logo-chip"><img src="/logo-mark.png" alt="ASL Consultoria.IA"></span>
+      <b>ASL <span>Consultoria.IA</span></b>
+    </a>
+    <nav>
+      <a href="#resultados">O que muda</a>
+      <a href="#como">Como funciona</a>
+      <a href="#segmentos">Segmentos</a>
+      <a class="btn btn-ghost btn-sm" href="/app">Entrar</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1>A operação segue o padrão quando você não está lá.</h1>
+      <p>Checklist, ponto e evidência de execução no mesmo sistema. Cada tarefa fecha com foto, horário e responsável — e o que não foi registrado aparece no painel antes de você perguntar.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="https://wa.me/5581987696000?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20sistema%20ASL%20Consultoria.IA%20para%20minha%20empresa." target="_blank" rel="noopener">Falar no WhatsApp</a>
+        <a class="btn btn-ghost" href="#como">Ver como funciona</a>
+      </div>
+      <p class="hero-note">Sem cadastro público: você fala com a gente, confirma os dados da empresa e recebe o acesso.</p>
+    </div>
+
+    <figure class="proof" aria-label="Exemplo de registro concluído no sistema">
+      <div class="proof-photo"></div>
+      <div class="proof-body">
+        <div class="proof-title">Limpeza da câmara fria</div>
+        <div class="proof-area">Cozinha · turno da manhã</div>
+        <dl class="proof-rows">
+          <div class="proof-row"><dt>Responsável</dt><dd>Marina Alves</dd></div>
+          <div class="proof-row"><dt>Concluída</dt><dd>07:42</dd></div>
+          <div class="proof-row"><dt>Aprovada por</dt><dd>Rogério Lima</dd></div>
+        </dl>
+        <div class="stamp"><i></i> Aprovado com evidência</div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="results" id="resultados">
+  <div class="wrap">
+    <h2>O que muda na segunda-feira seguinte</h2>
+    <p class="lede">Não é relatório bonito. É saber o que aconteceu em cada turno, com prova, sem depender de alguém lembrar de avisar.</p>
+
+    <div class="result-list">
+      <div class="result">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="#3FBF8F" stroke-width="1.6"/><path d="M7.5 12.3l3.1 3.1 6-6.4" stroke="#3FBF8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p><b>Você abre o painel e vê cada unidade, turno a turno.</b> O que está pendente, o que atrasou e quem estava escalado — antes do primeiro café.</p>
+      </div>
+      <div class="result">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="#3FBF8F" stroke-width="1.6"/><path d="M7.5 12.3l3.1 3.1 6-6.4" stroke="#3FBF8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p><b>O atraso aparece no dia, não no fim do mês.</b> Dá tempo de corrigir enquanto ainda é uma tarefa pendente, e não uma reclamação de hóspede.</p>
+      </div>
+      <div class="result">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="#3FBF8F" stroke-width="1.6"/><path d="M7.5 12.3l3.1 3.1 6-6.4" stroke="#3FBF8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p><b>Toda conclusão vem com foto, horário e responsável.</b> A aprovação é de outra pessoa, então o registro se sustenta em auditoria e em discussão trabalhista.</p>
+      </div>
+      <div class="result">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="#3FBF8F" stroke-width="1.6"/><path d="M7.5 12.3l3.1 3.1 6-6.4" stroke="#3FBF8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p><b>Ponto e checklist no mesmo lugar.</b> Entrada, saída e o que a pessoa entregou no turno saem no mesmo relatório, sem cruzar planilha com caderno.</p>
+      </div>
+      <div class="result">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="#3FBF8F" stroke-width="1.6"/><path d="M7.5 12.3l3.1 3.1 6-6.4" stroke="#3FBF8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p><b>Comparação entre setores e turnos.</b> Quando duas unidades rodam o mesmo checklist, a diferença de execução deixa de ser impressão e vira número.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="como">
+  <div class="wrap">
+    <h2>Três passos para colocar a equipe dentro</h2>
+    <div class="steps">
+      <div class="step">
+        <img class="step-photo" src="/photo-pousada-enxoval.jpg" alt="Rotina operacional real de uma pousada">
+        <h3>Fale com a gente</h3>
+        <p>Chame no WhatsApp ou mande um e-mail com CNPJ, nome e telefone. A gente confirma os dados e libera o acesso da sua empresa.</p>
+      </div>
+      <div class="step">
+        <img class="step-photo" src="/photo-checklist-tablet.jpg" alt="Checklist sendo preenchido em tablet">
+        <h3>Monte os checklists</h3>
+        <p>Tarefas por área, turno e responsável, com frequência diária, semanal ou mensal. Dá para marcar os pontos direto sobre a foto do ambiente.</p>
+      </div>
+      <div class="step">
+        <img class="step-photo" src="/photo-checklist-acesso.jpg" alt="Ativação de acesso com código de convite">
+        <h3>Entregue o código ao time</h3>
+        <p>Cada pessoa ativa a própria conta com um código de convite que a gente gera pra você. Ninguém compartilha senha, e quem sai da equipe perde o acesso na hora.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="segments" id="segmentos">
+  <div class="wrap">
+    <h2>O sistema fala a língua da sua operação</h2>
+    <p class="lede">O segmento é definido na contratação e ajusta os nomes das telas e as áreas sugeridas. Cozinha e salão não são a mesma coisa que quarto e recepção.</p>
+    <div class="seg-grid">
+      <a class="seg" href="https://wa.me/5581987696000?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20sistema%20ASL%20Consultoria.IA%20para%20o%20segmento%20de%20restaurante." target="_blank" rel="noopener">
+        <img class="seg-photo" src="/seg-restaurante.jpg" alt="Cozinha profissional de restaurante em operação">
+        <div class="seg-body">
+          <h3>Restaurantes</h3>
+          <p>Checklist por setor, controle de desperdício por item e conferência de abertura e fechamento.</p>
+          <ul><li>Cozinha</li><li>Salão</li><li>Bar</li><li>Estoque</li><li>Banheiros</li><li>Área externa</li></ul>
+          <span class="seg-link">Falar sobre o segmento restaurante →</span>
+        </div>
+      </a>
+      <a class="seg" href="https://wa.me/5581987696000?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20sistema%20ASL%20Consultoria.IA%20para%20o%20segmento%20de%20pousada." target="_blank" rel="noopener">
+        <img class="seg-photo" src="/seg-pousada.jpg" alt="Camareira arrumando quarto de pousada">
+        <div class="seg-body">
+          <h3>Pousadas e hotéis</h3>
+          <p>Rotina de camareira por ambiente, com evidência de quarto pronto antes do check-in.</p>
+          <ul><li>Quartos</li><li>Recepção</li><li>Café da manhã</li><li>Piscina</li><li>Lavanderia</li><li>Áreas comuns</li></ul>
+          <span class="seg-link">Falar sobre o segmento pousada →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contato">
+  <div class="wrap">
+    <div>
+      <h2>Comece pela unidade que mais te preocupa</h2>
+      <p>Fale com a gente pelo WhatsApp ou e-mail, confirme o CNPJ, nome e telefone da empresa, e a gente libera o acesso — sem formulário público, sem burocracia.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-solid" href="https://wa.me/5581987696000?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20sistema%20ASL%20Consultoria.IA%20para%20minha%20empresa." target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <a class="cta-email" href="mailto:andreluizzz707@gmail.com">andreluizzz707@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>ASL Consultoria.IA · Recife, PE</div>
+    <div>
+      <a href="/privacidade">Política de Privacidade</a> ·
+      <a href="/termos">Termos de Uso</a> ·
+      <a href="/app">Entrar no sistema</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /$
+Allow: /privacidade
+Allow: /termos
+Disallow: /app
+
+Sitemap: https://seudominio.com.br/sitemap.xml
